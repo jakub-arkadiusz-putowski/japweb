@@ -1,70 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Calendar</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moja Strona Internetowa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .category {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .category h2 {
+            margin-top: 0;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <main class="calendar-contain">
 
-    <!-- Title Bar -->
-    <section class="title-bar">
-      <button class="title-bar__burger" id="burger-toggle">
-        <span class="burger__lines">Toggle Menu</span>
-      </button>
-      <span class="title-bar__year">Calendar > May 2024</span>
-      <span class="title-bar__month">Month</span>
-      <div class="title-bar__controls">
-        <div class="title-bar__minimize"></div>
-        <div class="title-bar__maximize"></div>
-        <div class="title-bar__close"></div>
-      </div>
-    </section>
+    <h1>Piotrkowska19-web</h1>
 
-    <!-- Sidebar -->
-    <aside class="calendar__sidebar">
-      <div class="sidebar__nav">
-        <span class="sidebar__nav-item"><img src="icons/add.png" alt="Add Icon"></span>
-        <span class="sidebar__nav-item"><img src="icons/share.png" alt="Share Icon"></span>
-        <span class="sidebar__nav-item"><img src="icons/up.png" alt="Up Icon"></span>
-        <span class="sidebar__nav-item"><img src="icons/down.png" alt="Down Icon"></span>
-      </div>
-      <h2 class="sidebar__heading">Wednesday<br>April 6</h2>
-      <ul class="sidebar__list">
-        <li class="sidebar__list-item sidebar__list-item--complete"><span class="list-item__time">8:30</span> Team Meeting</li>
-        <li class="sidebar__list-item sidebar__list-item--complete"><span class="list-item__time">10:00</span> Lunch with Sasha</li>
-        <li class="sidebar__list-item"><span class="list-item__time">2:30</span> Design Review</li>
-        <li class="sidebar__list-item"><span class="list-item__time">4:00</span> Get Groceries</li>
-      </ul>
-    </aside>
+    <!-- Kategoria PSK -->
+    <div class="category">
+        <h2>PSK</h2>
+        <p><a href="semestr5.html">Semestr 5</a></p>
+    </div>
 
-    <!-- Calendar -->
-    <section class="calendar__days">
-      <section class="calendar__top-bar">
-        <span class="top-bar__days">Mon</span>
-        <span class="top-bar__days">Tue</span>
-        <span class="top-bar__days">Wed</span>
-        <span class="top-bar__days">Thu</span>
-        <span class="top-bar__days">Fri</span>
-        <span class="top-bar__days">Sat</span>
-        <span class="top-bar__days">Sun</span>
-      </section>
+    <!-- Kategoria Korepetycje -->
+    <div class="category">
+        <h2>Korepetycje</h2>
+        <ul>
+            <li><a href="matematyka.html">Matematyka</a></li>
+            <li><a href="fizyka.html">Fizyka</a></li>
+        </ul>
+    </div>
 
-      <!-- Week Rows -->
-      <section class="calendar__week">
-        <div class="calendar__day inactive"><span class="calendar__date">30</span></div>
-        <div class="calendar__day inactive"><span class="calendar__date">31</span></div>
-        <div class="calendar__day"><span class="calendar__date">1</span></div>
-        <div class="calendar__day"><span class="calendar__date">2</span></div>
-        <div class="calendar__day"><span class="calendar__date">3</span></div>
-        <div class="calendar__day"><span class="calendar__date">4</span></div>
-        <div class="calendar__day"><span class="calendar__date">5</span></div>
-      </section>
-    </section>
-
-  </main>
-  <script src="script.js"></script>
 </body>
 </html>
