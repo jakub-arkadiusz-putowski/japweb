@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalendarz z notatkami</title>
     <style>
-        /* Prosty styl kalendarza */
+        /* Styl kalendarza */
         .c-cal__container {
             display: flex;
             flex-direction: column;
@@ -26,6 +26,7 @@
             align-items: center;
             border: 1px solid #ccc;
             margin: 2px;
+            position: relative;
         }
         .c-cal__cel {
             cursor: pointer;
@@ -33,6 +34,13 @@
         }
         .c-cal__cel:hover {
             background-color: #e0e0e0;
+        }
+        .c-cal__cel.has-notes::after {
+            content: "🌟";
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 14px;
         }
         h1 {
             text-align: center;
@@ -49,23 +57,41 @@
         .note {
             margin-bottom: 10px;
         }
+        .note button {
+            margin-left: 10px;
+            font-size: 12px;
+        }
+        .summary-container {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 300px;
+        }
+        .summary-container h2 {
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
-    <h1>Kalendarz z notatkami</h1>
+    <h1>Kalendarz z notatkami - 2024</h1>
     <div class="c-cal__container" id="calendar"></div>
 
     <div class="note-container" id="note-container">
         <h2>Notatki</h2>
         <div id="note-list">Kliknij na dzień, aby zobaczyć notatki.</div>
         <form id="note-form" style="display: none; margin-top: 10px;">
-            <textarea id="note-input" placeholder="Dodaj notatkę" rows="3" style="width: 100%;"></textarea>
+            <textarea id="note-input" placeholder="Dodaj lub edytuj notatkę" rows="3" style="width: 100%;"></textarea>
             <button type="button" id="save-note" style="margin-top: 10px;">Zapisz</button>
         </form>
     </div>
 
+    <div class="summary-container" id="summary-container">
+        <h2>Dni z notatkami</h2>
+        <ul id="note-summary">Brak dni z notatkami.</ul>
+    </div>
+
     <script>
-        const notes = {}; // Obiekt do przechowywania notatek { "2022-01-01": ["Note 1", "Note 2"] }
+        const notes = {}; // Obiekt przechowujący notatki w formacie { "2024-01-01": ["Note 1", "Note 2"] }
 
         function createDayTitle(dayName) {
             const dayDiv = document.createElement('div');
@@ -79,6 +105,11 @@
             dayDiv.classList.add('c-cal__cel');
             dayDiv.textContent = day;
             dayDiv.dataset.date = fullDate;
+
+            // Sprawdzenie, czy dzień ma notatki
+            if (notes[fullDate] && notes[fullDate].length > 0) {
+                dayDiv.classList.add('has-notes');
+            }
 
             dayDiv.addEventListener('click', () => {
                 showNotes(fullDate);
@@ -116,7 +147,7 @@
 
             // Wypełnienie dni miesiąca
             for (let day = 1; day <= monthLength; day++) {
-                const fullDate = `2022-${monthIndex}-${day.toString().padStart(2, '0')}`;
+                const fullDate = `2024-${monthIndex}-${day.toString().padStart(2, '0')}`;
                 currentRow.appendChild(createDayCell(day, fullDate));
                 if ((startDay + day - 1) % 7 === 0 || day === monthLength) {
                     container.appendChild(currentRow);
@@ -124,6 +155,74 @@
                     currentRow.classList.add('c-cal__row');
                 }
             }
+        }
+
+        function updateSummary() {
+            const summaryList = document.getElementById('note-summary');
+            summaryList.innerHTML = '';
+
+            const datesWithNotes = Object.keys(notes).filter(date => notes[date].length > 0);
+
+            if (datesWithNotes.length === 0) {
+                summaryList.textContent = 'Brak dni z notatkami.';
+                return;
+            }
+
+            datesWithNotes.forEach(date => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${date}: ${notes[date].join(', ')}`;
+                summaryList.appendChild(listItem);
+            });
+        }
+
+        function showNotes(date) {
+            const noteList = document.getElementById('note-list');
+            const noteForm = document.getElementById('note-form');
+            const noteInput = document.getElementById('note-input');
+            const saveNoteButton = document.getElementById('save-note');
+
+            noteList.innerHTML = ''; // Czyść listę notatek
+            const notesForDate = notes[date] || [];
+            notesForDate.forEach((note, index) => {
+                const noteDiv = document.createElement('div');
+                noteDiv.classList.add('note');
+                noteDiv.textContent = note;
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edytuj';
+                editButton.onclick = () => {
+                    noteInput.value = note;
+                    notes[date].splice(index, 1);
+                };
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Usuń';
+                deleteButton.onclick = () => {
+                    notes[date].splice(index, 1);
+                    if (notes[date].length === 0) {
+                        delete notes[date];
+                    }
+                    showNotes(date);
+                    updateSummary();
+                };
+
+                noteDiv.appendChild(editButton);
+                noteDiv.appendChild(deleteButton);
+                noteList.appendChild(noteDiv);
+            });
+
+            noteForm.style.display = 'block';
+            noteInput.value = '';
+
+            saveNoteButton.onclick = () => {
+                const noteText = noteInput.value.trim();
+                if (noteText) {
+                    notes[date] = notes[date] || [];
+                    notes[date].push(noteText);
+                    showNotes(date);
+                    updateSummary();
+                }
+            };
         }
 
         function generateCalendar(year) {
@@ -151,37 +250,8 @@
             });
         }
 
-        function showNotes(date) {
-            const noteList = document.getElementById('note-list');
-            const noteForm = document.getElementById('note-form');
-            const noteInput = document.getElementById('note-input');
-            const saveNoteButton = document.getElementById('save-note');
-
-            noteList.innerHTML = ''; // Czyść listę notatek
-            const notesForDate = notes[date] || [];
-            notesForDate.forEach(note => {
-                const noteDiv = document.createElement('div');
-                noteDiv.classList.add('note');
-                noteDiv.textContent = note;
-                noteList.appendChild(noteDiv);
-            });
-
-            // Pokaż formularz dodawania notatek
-            noteForm.style.display = 'block';
-            noteInput.value = ''; // Wyczyszczenie pola tekstowego
-
-            saveNoteButton.onclick = () => {
-                const noteText = noteInput.value.trim();
-                if (noteText) {
-                    notes[date] = notes[date] || [];
-                    notes[date].push(noteText);
-                    showNotes(date); // Odśwież widok notatek
-                }
-            };
-        }
-
-        // Wygenerowanie kalendarza na rok 2022
-        generateCalendar(2022);
+        // Wygenerowanie kalendarza na rok 2024
+        generateCalendar(2024);
     </script>
 </body>
 </html>
