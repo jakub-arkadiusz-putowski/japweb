@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalendarz</title>
+    <title>Kalendarz z notatkami</title>
     <style>
         /* Prosty styl kalendarza */
         .c-cal__container {
@@ -37,13 +37,36 @@
         h1 {
             text-align: center;
         }
+        .note-container {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 300px;
+        }
+        .note-container h2 {
+            margin-top: 0;
+        }
+        .note {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Kalendarz</h1>
+    <h1>Kalendarz z notatkami</h1>
     <div class="c-cal__container" id="calendar"></div>
 
+    <div class="note-container" id="note-container">
+        <h2>Notatki</h2>
+        <div id="note-list">Kliknij na dzień, aby zobaczyć notatki.</div>
+        <form id="note-form" style="display: none; margin-top: 10px;">
+            <textarea id="note-input" placeholder="Dodaj notatkę" rows="3" style="width: 100%;"></textarea>
+            <button type="button" id="save-note" style="margin-top: 10px;">Zapisz</button>
+        </form>
+    </div>
+
     <script>
+        const notes = {}; // Obiekt do przechowywania notatek { "2022-01-01": ["Note 1", "Note 2"] }
+
         function createDayTitle(dayName) {
             const dayDiv = document.createElement('div');
             dayDiv.classList.add('c-cal__col');
@@ -56,9 +79,11 @@
             dayDiv.classList.add('c-cal__cel');
             dayDiv.textContent = day;
             dayDiv.dataset.date = fullDate;
+
             dayDiv.addEventListener('click', () => {
-                alert(`Wybrałeś dzień: ${fullDate}`);
+                showNotes(fullDate);
             });
+
             return dayDiv;
         }
 
@@ -124,6 +149,35 @@
                 fillCalendar(month.name, month.days, (index + 1).toString().padStart(2, '0'), startDay);
                 startDay = (startDay + month.days) % 7 || 7;
             });
+        }
+
+        function showNotes(date) {
+            const noteList = document.getElementById('note-list');
+            const noteForm = document.getElementById('note-form');
+            const noteInput = document.getElementById('note-input');
+            const saveNoteButton = document.getElementById('save-note');
+
+            noteList.innerHTML = ''; // Czyść listę notatek
+            const notesForDate = notes[date] || [];
+            notesForDate.forEach(note => {
+                const noteDiv = document.createElement('div');
+                noteDiv.classList.add('note');
+                noteDiv.textContent = note;
+                noteList.appendChild(noteDiv);
+            });
+
+            // Pokaż formularz dodawania notatek
+            noteForm.style.display = 'block';
+            noteInput.value = ''; // Wyczyszczenie pola tekstowego
+
+            saveNoteButton.onclick = () => {
+                const noteText = noteInput.value.trim();
+                if (noteText) {
+                    notes[date] = notes[date] || [];
+                    notes[date].push(noteText);
+                    showNotes(date); // Odśwież widok notatek
+                }
+            };
         }
 
         // Wygenerowanie kalendarza na rok 2022
