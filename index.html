@@ -4,13 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona główna</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>jap-web</h1>
     <p>plain text</p>
     <a href="fizyka.html">physics</a>
     <a href="test.html">programowanie-komputerow2</a>
-    <a href="maths.html">maths</a
-    <a href="callendar.html">callendar</a>                       
+    <a href="maths.html">maths</a>
+    <a href="callendar.html">callendar</a>
+    
+    <header>
+      <!-- Struktura kalendarza -->
+    </header>
+
+    <div class="wrapper">
+        <div class="c-calendar">
+            <div class="c-cal__container c-calendar__style">
+                <script>
+                    // Rok do wyświetlenia
+                    const year = 2022;
+
+                    // Oblicz pierwszy dzień roku
+                    let today = new Date(`January 1, ${year}`);
+                    let start_day = today.getDay() + 1;
+
+                    // Zmienna dni lutego (uwzględnia lata przestępne)
+                    let febDays = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28;
+
+                    // Wywołanie funkcji generujących kalendarz
+                    fill_table("January", 31, "01");
+                    fill_table("February", febDays, "02");
+                    fill_table("March", 31, "03");
+                    // Dodaj pozostałe miesiące
+                </script>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
